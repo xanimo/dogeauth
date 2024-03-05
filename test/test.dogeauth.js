@@ -1,9 +1,9 @@
 'use strict';
 
-var bitauth = require('../');
+var dogeauth = require('../');
 var chai = require('chai');
 
-describe('bitauth', function() {
+describe('dogeauth', function() {
 
   var should = chai.should();
 
@@ -39,7 +39,7 @@ describe('bitauth', function() {
   describe('#generateSin', function() {
 
     it('should generate a sin object', function(done) {
-      keys = bitauth.generateSin();
+      keys = dogeauth.generateSin();
       should.exist(keys);
       should.exist(keys.pub);
       should.exist(keys.priv);
@@ -52,12 +52,12 @@ describe('bitauth', function() {
   describe('#getPublicKeyFromPrivateKey', function() {
 
     it('should properly get the public key', function(done) {
-      bitauth.getPublicKeyFromPrivateKey(keys.priv).should.equal(keys.pub);
+      dogeauth.getPublicKeyFromPrivateKey(keys.priv).should.equal(keys.pub);
       done();
     });
 
     it('should properly get compressed public key from a previously known private key', function(done) {
-      bitauth.getPublicKeyFromPrivateKey(keysKnown.priv).should.equal(keysKnown.pub);
+      dogeauth.getPublicKeyFromPrivateKey(keysKnown.priv).should.equal(keysKnown.pub);
       done();
     });
 
@@ -66,12 +66,12 @@ describe('bitauth', function() {
   describe('#getSinFromPublicKey', function() {
 
     it('should properly get the sin', function(done) {
-      bitauth.getSinFromPublicKey(keys.pub).should.equal(keys.sin);
+      dogeauth.getSinFromPublicKey(keys.pub).should.equal(keys.sin);
       done();
     });
 
     it('should properly get the sin from a previously known compressed public key', function(done) {
-      bitauth.getSinFromPublicKey(keysKnown.pub).should.equal(keysKnown.sin);
+      dogeauth.getSinFromPublicKey(keysKnown.pub).should.equal(keysKnown.sin);
       done();
     });
 
@@ -80,7 +80,7 @@ describe('bitauth', function() {
   describe('#sign', function() {
 
     it('should sign the string', function(done) {
-      signature = bitauth.sign(contract, keys.priv);
+      signature = dogeauth.sign(contract, keys.priv);
       should.exist(signature);
       done();
     });
@@ -90,7 +90,7 @@ describe('bitauth', function() {
   describe('#verifySignature', function() {
 
     it('should verify the signature', function(done) {
-      bitauth.verifySignature(contract, keys.pub, signature, function(err, valid) {
+      dogeauth.verifySignature(contract, keys.pub, signature, function(err, valid) {
         should.not.exist(err);
         should.exist(valid);
         valid.should.equal(true);
@@ -102,11 +102,11 @@ describe('bitauth', function() {
 
       var leadingZeroKeys = {
         priv: privateKeyToZero,
-        pub: bitauth.getPublicKeyFromPrivateKey(privateKeyToZero)
+        pub: dogeauth.getPublicKeyFromPrivateKey(privateKeyToZero)
       };
 
-      signature = bitauth.sign(contract, leadingZeroKeys.priv);
-      bitauth.verifySignature(contract, leadingZeroKeys.pub, signature, function(err, valid) {
+      signature = dogeauth.sign(contract, leadingZeroKeys.priv);
+      dogeauth.verifySignature(contract, leadingZeroKeys.pub, signature, function(err, valid) {
         should.not.exist(err);
         should.exist(valid);
         valid.should.equal(true);
@@ -118,7 +118,7 @@ describe('bitauth', function() {
 
     describe('Reference Signature Tests', function () {
         var priv = "8295702b2273896ae085c3caebb02985cab02038251e10b6f67a14340edb51b0";
-        var pub = bitauth.getPublicKeyFromPrivateKey(priv);
+        var pub = dogeauth.getPublicKeyFromPrivateKey(priv);
         var refPairs = [
             ["foo",
                 "3044022045bc5aba353f97316b92996c01eba6e0b0cb63a763d26898a561c748a9545c7502204dc0374c8d4ca489c161b21ff5e25714f1046d759ec9adf9440233069d584567"],
@@ -151,7 +151,7 @@ describe('bitauth', function() {
             var contract = pair[0];
             var signature = pair[1];
             it('should verify reference signature for: "' + contract + '"', function (done) {
-                bitauth.verifySignature(contract, pub, signature, function (err, valid) {
+                dogeauth.verifySignature(contract, pub, signature, function (err, valid) {
                     should.not.exist(err);
                     should.exist(valid);
                     valid.should.equal(true);
@@ -166,7 +166,7 @@ describe('bitauth', function() {
   describe('#validateSinTrue', function() {
 
     it('should validate the sin as true', function(done) {
-      var valid = bitauth.validateSin(singood);
+      var valid = dogeauth.validateSin(singood);
       should.equal(true, valid);
       done();
     });
@@ -176,13 +176,13 @@ describe('bitauth', function() {
   describe('#validateSinFalse', function() {
 
     it('should validate the sin as false because of bad checksum', function(done) {
-      var valid = bitauth.validateSin(sinbad);
+      var valid = dogeauth.validateSin(sinbad);
       should.equal(false, valid);
       done();
     });
 
     it('should validate the sin as false because of non-base58', function(done) {
-      var valid = bitauth.validateSin('not#base!58');
+      var valid = dogeauth.validateSin('not#base!58');
       should.equal(false, valid);
       done();
     });
@@ -192,7 +192,7 @@ describe('bitauth', function() {
   describe('#validateSinCallback', function() {
 
     it('should receive error callback', function(done) {
-      bitauth.validateSin(sinbad, function(err) {
+      dogeauth.validateSin(sinbad, function(err) {
         should.exist(err);
         err.message.should.equal('Checksum does not match');
         done();
@@ -207,7 +207,7 @@ describe('bitauth', function() {
     describe('#encrypt', function() {
 
       it('should encrypt the secret message', function(done) {
-        enc = bitauth.encrypt(password, secret);
+        enc = dogeauth.encrypt(password, secret);
         should.exist(enc);
         done();
       });
@@ -216,14 +216,14 @@ describe('bitauth', function() {
     describe('#decrypt', function() {
 
       it('should decrypt the secret message', function(done) {
-        var dec = bitauth.decrypt(password, enc);
+        var dec = dogeauth.decrypt(password, enc);
         should.exist(dec);
         dec.should.equal(secret);
         done();
       });
 
       it('should decrypt a previously known message', function(done) {
-        var dec = bitauth.decrypt(password, encryptedSecret);
+        var dec = dogeauth.decrypt(password, encryptedSecret);
         should.exist(dec);
         dec.should.equal(secret);
         done();
@@ -234,7 +234,7 @@ describe('bitauth', function() {
     describe('#middleware', function() {
 
       it('should expose an express middleware', function(done) {
-        bitauth.middleware({}, {}, function() {
+        dogeauth.middleware({}, {}, function() {
           done();
         });
       });

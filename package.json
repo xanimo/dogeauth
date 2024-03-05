@@ -1,5 +1,5 @@
 {
-  "name": "bitauth",
+  "name": "dogeauth",
   "description": "Passwordless authentication using cryptography",
   "author": {
     "name": "xanimo"

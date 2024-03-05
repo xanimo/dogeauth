@@ -1,7 +1,7 @@
 'use strict';
 
 const benchmark = require('benchmark');
-const bitauth = require('../lib/bitauth-node');
+const dogeauth = require('../lib/dogeauth-node');
 
 const maxTime = 10;
 
@@ -16,26 +16,26 @@ const signatureBuffer = Buffer.from(signature, 'hex');
 
 // invalid checksum
 const sinbad = 'Tf1Jc1xSbqasm5QLwwSQc5umddx2h7mAMhX';
-const singood = bitauth.getSinFromPublicKey(pubkeyBuffer);
+const singood = dogeauth.getSinFromPublicKey(pubkeyBuffer);
 
-function nodebitauthVerify() {
-  bitauth.verifySignature(contractBuffer, pubkeyBuffer, signatureBuffer);
+function nodedogeauthVerify() {
+  dogeauth.verifySignature(contractBuffer, pubkeyBuffer, signatureBuffer);
 }
-function nodebitauthSign() {
-  bitauth.sign(contractBuffer, privkeyBuffer);
+function nodedogeauthSign() {
+  dogeauth.sign(contractBuffer, privkeyBuffer);
 }
-function nodebitauthValidateSinBad() {
-  bitauth.validateSin(sinbad);
+function nodedogeauthValidateSinBad() {
+  dogeauth.validateSin(sinbad);
 }
-function nodebitauthValidateSinGood() {
-  bitauth.validateSin(singood);
+function nodedogeauthValidateSinGood() {
+  dogeauth.validateSin(singood);
 }
 
 const suite = new benchmark.Suite();
-suite.add('bitauth#createSignature', nodebitauthSign, { maxTime: maxTime });
-suite.add('bitauth#verifySignature', nodebitauthVerify, { maxTime: maxTime });
-suite.add('bitauth#validateBadSin', nodebitauthValidateSinBad, { maxTime: maxTime });
-suite.add('bitauth#validateGoodSin', nodebitauthValidateSinGood, { maxTime: maxTime });
+suite.add('dogeauth#createSignature', nodedogeauthSign, { maxTime: maxTime });
+suite.add('dogeauth#verifySignature', nodedogeauthVerify, { maxTime: maxTime });
+suite.add('dogeauth#validateBadSin', nodedogeauthValidateSinBad, { maxTime: maxTime });
+suite.add('dogeauth#validateGoodSin', nodedogeauthValidateSinGood, { maxTime: maxTime });
 suite
   .on('cycle', function(event) {
     console.log(String(event.target));

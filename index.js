@@ -1,15 +1,15 @@
 'use strict';
 
-var bitauth;
+var dogeauth;
 if (process.browser) {
-  bitauth = require('./lib/bitauth-browserify');
+  dogeauth = require('./lib/dogeauth-browserify');
 } else {
-  bitauth = require('./lib/bitauth-node');
+  dogeauth = require('./lib/dogeauth-node');
 
   // add node-specific encrypt/decrypt
-  bitauth.encrypt = require('./lib/encrypt');
-  bitauth.decrypt = require('./lib/decrypt');
-  bitauth.middleware = require('./lib/middleware/bitauth');
+  dogeauth.encrypt = require('./lib/encrypt');
+  dogeauth.decrypt = require('./lib/decrypt');
+  dogeauth.middleware = require('./lib/middleware/dogeauth');
 }
 
-module.exports = bitauth;
+module.exports = dogeauth;

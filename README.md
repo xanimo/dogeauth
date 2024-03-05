@@ -1,11 +1,11 @@
-BitAuth
+dogeauth
 =======
 
 Passwordless authentication using Bitcoin cryptography
 
 ## Overview
 
-BitAuth is a way to do secure, passwordless authentication using the cryptography
+dogeauth is a way to do secure, passwordless authentication using the cryptography
 in Bitcoin. Instead of using a shared secret, the client signs each request using
 a private key and the server checks to make sure the signature is valid and matches
 the public key.
@@ -15,7 +15,7 @@ the public key.
 Install with Node.js:
 
 ```bash
-npm install bitauth
+npm install dogeauth
 ```
 
 ## Advantages over other authentication mechanisms
@@ -30,7 +30,7 @@ not need to be exchanged between the server and client over a side channel like
 in HMAC.
 
 ## Technical Overview
-BitAuth uses the same technology in Bitcoin. A public private key pair is created
+dogeauth uses the same technology in Bitcoin. A public private key pair is created
 using elliptic curve secp256k1. The public SIN (System identification number),
 like a bitcoin address, is the RIPEMD 160, SHA256 hash of the public key.
 See https://en.bitcoin.it/wiki/Identity_protocol_v1 for complete details.
@@ -48,8 +48,8 @@ the previously used nonce.
 ## Technology is readily available
 
 With the growing popularity of Bitcoin, there are already libraries written in
-many languages. Because BitAuth uses the same technology as Bitcoin, it is easy
-to start using BitAuth.
+many languages. Because dogeauth uses the same technology as Bitcoin, it is easy
+to start using dogeauth.
 
 
 ## Problems with password authentication
@@ -64,10 +64,10 @@ having multiple services compromised.
 
 ## Passwordless based authentication across web services
 
-With BitAuth, users can use the same, strong password to encrypt their keys and
+With dogeauth, users can use the same, strong password to encrypt their keys and
 not worry about one service gaining access to another.
 
-In the future, an identity system could be built around BitAuth keys where a user
+In the future, an identity system could be built around dogeauth keys where a user
 could create one key to represent an identity which could authenticate against
 multiple services.
 
@@ -89,7 +89,7 @@ Example server
 var express = require('express');
 var bodyParser = require('body-parser');
 var rawBody = require('../lib/middleware/rawbody');
-var bitauth = require('../lib/middleware/bitauth');
+var dogeauth = require('../lib/middleware/dogeauth');
 
 var users = {
   'Tf7UNQnxB8SccfoyZScQmb34V2GdEtQkzDz': {name: 'Alice'},
@@ -103,12 +103,12 @@ app.use(rawBody);
 app.use(bodyParser());
 
 
-app.get('/user', bitauth, function(req, res) {
+app.get('/user', dogeauth, function(req, res) {
   if(!req.sin || !users[req.sin]) return res.send(401, {error: 'Unauthorized'});
   res.send(200, users[req.sin]);
 });
 
-app.post('/pizzas', bitauth, function(req, res) {
+app.post('/pizzas', dogeauth, function(req, res) {
   if(!req.sin || !users[req.sin]) return res.send(401, {error: 'Unauthorized'});
   var pizza = req.body;
   pizza.owner = users[req.sin].name;
@@ -127,9 +127,9 @@ Example client
 
 ```javascript
 var request = require('request');
-var bitauth = require('../lib/bitauth');
+var dogeauth = require('../lib/dogeauth');
 
-// These can be generated with bitauth.generateSin()
+// These can be generated with dogeauth.generateSin()
 var keys = {
   alice: '38f93bdda21a5c4a7bae4eb75bb7811cbc3eb627176805c1009ff2099263c6ad',
   bob: '09880c962437080d72f72c8c63a69efd65d086c9e7851a87b76373eb6ce9aab5'
@@ -143,8 +143,8 @@ for(k in keys) {
   var options = {
     url: url,
     headers: {
-      'x-identity': bitauth.getPublicKeyFromPrivateKey(keys[k]),
-      'x-signature': bitauth.sign(dataToSign, keys[k])
+      'x-identity': dogeauth.getPublicKeyFromPrivateKey(keys[k]),
+      'x-signature': dogeauth.sign(dataToSign, keys[k])
     }
   };
 
@@ -169,8 +169,8 @@ for(k in keys) {
   var options = {
     url: url,
     headers: {
-      'x-identity': bitauth.getPublicKeyFromPrivateKey(keys[k]),
-      'x-signature': bitauth.sign(dataToSign, keys[k])
+      'x-identity': dogeauth.getPublicKeyFromPrivateKey(keys[k]),
+      'x-signature': dogeauth.sign(dataToSign, keys[k])
     },
     json: data
   };
@@ -188,8 +188,8 @@ for(k in keys) {
 ```
 
 ## Middleware
-BitAuth exposes a connect middleware for use in connect or ExpressJS applications.  Use:
+dogeauth exposes a connect middleware for use in connect or ExpressJS applications.  Use:
 ```javascript
-var bitauth = require('bitauth');
-app.use( bitauth.middleware );
+var dogeauth = require('dogeauth');
+app.use( dogeauth.middleware );
 ```
