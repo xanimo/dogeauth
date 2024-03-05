@@ -30,7 +30,7 @@ describe('bitauth', function() {
   var contract = 'kéyboard cät';
   var secret = 'o hai, nsa. how i do teh cryptos?';
   var password = 's4705hiru13z!';
-  var encryptedSecret = '291Dm9unZMwfxBA7BEHiQsraRxCrMRqwJ2TjCWwEH3Sp5QGMehNFNgZLo62sgF5Khe';
+  var encryptedSecret = '5gVE4SHQ5X2WUWh1RhwQX5JLDuqrteAz1g5TftQQpzNz81ncjJUAKum3EFywSEcBLZ';
 
   // signature from generate keys
   var signature = null;
